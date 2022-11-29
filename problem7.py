@@ -44,13 +44,13 @@ def main():
 
     #e_nfa = build_e_nfa(regular)
     
-    #remove e-moves
+    # remove e-moves
 
     #nfa = remove_e_moves(e_nfa)
 
     # test if w is accepted
 
-    #res = accepted(nfa, w)
+    # res = accepted(nfa, w)
 
 
 main()

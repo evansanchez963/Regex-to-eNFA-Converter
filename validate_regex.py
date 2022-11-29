@@ -16,7 +16,7 @@ def are_paren_balanced(regex):
 
 # Operands are any value of [000] through [999]
 def check_operand(operand):
-    if(len(operand) != 5):
+    if(len(operand) < 5):
         return False
 
     for i in range(len(operand)):
@@ -26,6 +26,8 @@ def check_operand(operand):
             return False
         elif i == 4 and operand[i] != "]":
             return False
+        elif i == 5 and operand[i] not in [".", "U", "*", ")"]:
+            return False
     
     return True
 
@@ -33,7 +35,7 @@ def are_operands_valid(regex):
     # Check if each '[' is followed by 3 integers and a closing bracket.
     for i in range(len(regex)):
         if regex[i] == "[":
-            if not check_operand(regex[i:i+5]):
+            if not check_operand(regex[i:i+6]):
                 return False
     
     return True
