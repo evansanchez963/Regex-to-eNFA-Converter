@@ -1,3 +1,9 @@
+"""
+    ARGS:
+    1: regex - A string representing a regex
+
+    DESCRIPTION: Returns true if parentheses are balanced in expression, false if not.
+"""
 def are_paren_balanced(regex):
     stack = []
 
@@ -14,7 +20,16 @@ def are_paren_balanced(regex):
         return True
     return False
 
-# Operands are any value of [000] through [999]
+
+
+
+
+"""
+    ARGS:
+    1: operand - A string representing an operand in the form of [000] through [999]
+
+    DESCRIPTION: Returns true if the operand is in the correct form, false if not.
+"""
 def check_operand(operand):
     if(len(operand) < 5):
         return False
@@ -31,8 +46,18 @@ def check_operand(operand):
     
     return True
 
+
+
+
+
+"""
+    ARGS:
+    1: regex - A string representing a regex
+
+    DESCRIPTION: Returns true if operands are in the correct form in regex, false if not.
+"""
 def are_operands_valid(regex):
-    # Check if each '[' is followed by 3 integers and a closing bracket.
+    # Check if each '[' is followed by 3 integers and a closing bracket
     for i in range(len(regex)):
         if regex[i] == "[":
             if not check_operand(regex[i:i+6]):
@@ -40,10 +65,21 @@ def are_operands_valid(regex):
     
     return True
 
-# Check for 'U', '.'m and '*' characters to see if they are in the right places.
+
+
+
+
+
+"""
+    ARGS:
+    1: regex - A string representing a regex
+
+    DESCRIPTION: Returns true if operators are in the correct places in regex, false if not.
+    Checks the left and right sides of operators such as 'U', '.', and '*'.
+"""
 def are_operators_valid(regex):
     for i in range(len(regex)):
-        # Check left and right sides of 'U' and '.' and left side of '*'.
+        # Check left and right sides of 'U' and '.' and left side of '*'
         if regex[i] == "U":
             if i == len(regex) - 1:
                 return False
@@ -64,6 +100,16 @@ def are_operators_valid(regex):
 
     return True
 
+
+
+
+
+"""
+    ARGS:
+    1: regex - A string representing a regex
+
+    DESCRIPTION: Returns true if regex is valid, false if not
+"""
 def is_regex_valid(regex):
     paren_balanced = are_paren_balanced(regex)
     operands_valid = are_operands_valid(regex)
