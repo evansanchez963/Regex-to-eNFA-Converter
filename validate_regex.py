@@ -40,7 +40,7 @@ def are_operands_valid(regex):
     
     return True
 
-# Check for 'U', '.'m and '*' characters to see if they are in the right places.
+# Check for 'U', '.', and '*' characters to see if they are in the right places.
 def are_operators_valid(regex):
     for i in range(len(regex)):
         # Check left and right sides of 'U' and '.' and left side of '*'.
