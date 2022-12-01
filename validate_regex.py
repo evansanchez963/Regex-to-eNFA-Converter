@@ -41,7 +41,7 @@ def check_operand(operand):
             return False
         elif i == 4 and operand[i] != "]":
             return False
-        elif i == 5 and operand[i] not in [".", "U", "*", ")"]:
+        elif i == 5 and operand[i] not in [".", "+", "*", ")"]:
             return False
     
     return True
@@ -75,12 +75,12 @@ def are_operands_valid(regex):
     1: regex - A string representing a regex
 
     DESCRIPTION: Returns true if operators are in the correct places in regex, false if not.
-    Checks the left and right sides of operators such as 'U', '.', and '*'.
+    Checks the left and right sides of operators such as '+', '.', and '*'.
 """
 def are_operators_valid(regex):
     for i in range(len(regex)):
-        # Check left and right sides of 'U' and '.' and left side of '*'
-        if regex[i] == "U":
+        # Check left and right sides of '+' and '.' and left side of '*'
+        if regex[i] == "+":
             if i == len(regex) - 1:
                 return False
             elif regex[i - 1] not in ["]", ")", "*"]: 

@@ -1,16 +1,17 @@
 from validate_regex import is_regex_valid
-from regex_to_eNFA import *
+from regex_to_tree import *
 
 """
     TEST CASES:
-    [000]U[000].[111]
-    ([000]U[000].[111])*.([000]U[333])
+    [000]+[000].[111]
+    ([000]+[000].[111])*.([000]+[333])
+    ([100]+[001])*.[100]
 """
 
 def main():
     #regex = input("Enter a regular expression: ")
     #regex = regex.replace(" ", "") # Remove whitespace from regex
-    regex = "([000]U[000].[111])*.([000]U[333])"
+    regex = "([100]+[001])*.[100]"
     #w = input("Enter a string w: ")
 
     # Validate regex, terminate program if regex is invalid
@@ -24,9 +25,12 @@ def main():
 
     # Part 1: Convert regex to e-NFA
     postfix = infix_to_postfix(regex)
-    #print(*postfix, sep=" ")
-    expression_tree = construct_expression_tree(postfix)
-    inorder = inorder_traversal(expression_tree)
+    print(*postfix, sep=" ")
+    
+    #expression_tree = construct_expression_tree(postfix)
+    #inorder_traversal(expression_tree)
+    #print()
+    #print(expression_tree.data)
 
     # Part 2: Remove e-moves from NFA
 

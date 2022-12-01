@@ -9,7 +9,7 @@ def infix_to_postfix(regex):
     precedence_dict = {
         "": 0,
         "(": 1,
-        "U": 2,
+        "+": 2,
         ".": 3,
         "*": 4
     }
@@ -35,7 +35,7 @@ def infix_to_postfix(regex):
                 if operator != "(":
                     postfix.append(operator)
             stack.pop()
-        elif curr_char in ["U", ".", "*"]:
+        elif curr_char in ["+", ".", "*"]:
             if len(stack) == 0:
                 stack.append(curr_char)
             else:
@@ -92,7 +92,7 @@ def construct_expression_tree(postfix):
 
     for str in postfix:
         # If the operators are union or concatenation, they will always be parents with two children being operands
-        if str == "U" or str == ".":
+        if str == "+" or str == ".":
             y = stack.pop()
             x = stack.pop()
 
@@ -133,12 +133,30 @@ def inorder_traversal(root):
         return
 
     # if the current token is an operator, print open parenthesis
-    if root.data in ["U", ".", "*"]:
+    if root.data in ["+", ".", "*"]:
         print("(", end="")
     
     inorder_traversal(root.left)
     print(root.data, end="")
     inorder_traversal(root.right)
 
-    if root.data in ["U", ".", "*"]:
+    if root.data in ["+", ".", "*"]:
         print(")", end="")
+
+
+
+
+"""
+class NFA:
+    def __init__(self, start_state, accepting_states, transitions):
+        self.start_state = start_state
+        self.accepting_states = accepting_states
+        self.transitions = transitions
+
+def build_eNFA(expression_tree):
+    start_state = 0
+    accepting_states = [0]
+    transitions = []
+"""
+
+    
