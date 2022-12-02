@@ -22,11 +22,14 @@ def infix_to_postfix(regex):
 
         if curr_char.isdigit() or curr_char == "]":
             continue
+        # Push operand to postfix
         elif curr_char == "[":
             operand = regex[i:i+5]
             postfix.append(operand)
+        # Always append '(' to stack
         elif curr_char == "(":
             stack.append("(")
+        # Pop all operators and push to postfix until '(' is reached 
         elif curr_char == ")":
             top = stack[len(stack)-1]
             while top != "(":
@@ -35,6 +38,7 @@ def infix_to_postfix(regex):
                 if operator != "(":
                     postfix.append(operator)
             stack.pop()
+        # Handle operators
         elif curr_char in ["+", ".", "*"]:
             if len(stack) == 0:
                 stack.append(curr_char)
@@ -52,6 +56,7 @@ def infix_to_postfix(regex):
                 else:
                     stack.append(curr_char)
     
+    # Pop all leftover operators from stack and append to postfix
     while len(stack) != 0:
         operator = stack.pop()
         postfix.append(operator)
