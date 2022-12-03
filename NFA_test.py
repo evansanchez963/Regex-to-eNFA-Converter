@@ -36,7 +36,7 @@ class NFA:
     DESCRIPTION: Creates an nfa for an operand. Creates a new start state and end state
     where the transition from the start state to the end state is the given operand.
 """
-def create_operand_NFA(operand):
+def operand_NFA(operand):
     start_state = 0
     accepting_states = []
     transitions = {}
@@ -172,25 +172,17 @@ def kleene_star(nfa):
 
 
 def main():
-    NFA_a = create_operand_NFA("[000]")
-    print("NFA_a's transitions:", NFA_a.transitions)
+    nfa_1 = operand_NFA("[100]")
+    nfa_2 = operand_NFA("[001]")
 
-    kleene_NFA = kleene_star(NFA_a)
-    print("kleene_NFA's transitions:", kleene_NFA.transitions)
+    union_nfa = union(nfa_1, nfa_2)
+    kleene_nfa = kleene_star(union_nfa)
 
-    NFA_b = create_operand_NFA("[111]")
-    print("NFA_b's transitions:", NFA_b.transitions)
+    print(kleene_nfa.start_state)
+    print(kleene_nfa.accepting_states)
+    print(kleene_nfa.transitions)
 
-    union_NFA = union(kleene_NFA, NFA_b)
-    print("union_NFA's transitions:", union_NFA.accepting_states)
-
-    #concat_NFA = concat(kleene_NFA, NFA_b)
-    #print("concat_NFA's transitions:", concat_NFA.accepting_states)
-
-    #concat_NFA = concat(NFA_a, NFA_b)
-    #print("concat_NFA's transitions:", concat_NFA.accepting_states)
-
-    #union_NFA = union(NFA_a, NFA_b)
-    #print("union_NFA's transitions:", union_NFA.transitions)
+    nfa_3 = operand_NFA("[100]")
+    concat_nfa = concat(kleene_nfa, nfa_3)
 
 main()

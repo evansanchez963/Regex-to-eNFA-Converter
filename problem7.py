@@ -6,12 +6,15 @@ from regex_to_tree import *
     [000]+[000].[111]
     ([000]+[000].[111])*.([000]+[333])
     ([100]+[001])*.[100]
+    ([000]+e)
+    ([100]+[011])*.([101].[100]+[000])*.([000]+e)
+    [011].[101]*.[000]
 """
 
 def main():
     #regex = input("Enter a regular expression: ")
     #regex = regex.replace(" ", "") # Remove whitespace from regex
-    regex = "[000]+[000].[111]"
+    regex = "([100]+[001])*.[100]"
     #w = input("Enter a string w: ")
 
     # Validate regex, terminate program if regex is invalid
@@ -27,9 +30,9 @@ def main():
     postfix = infix_to_postfix(regex)
     print(*postfix, sep=" ")
 
-    expression_tree = construct_expression_tree(postfix)
+    #expression_tree = construct_expression_tree(postfix)
     #print()
-    print(expression_tree.data)
+    #print(expression_tree.data)
 
     # Part 2: Remove e-moves from NFA
 

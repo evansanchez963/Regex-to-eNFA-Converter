@@ -83,16 +83,16 @@ def are_operators_valid(regex):
         if regex[i] == "+":
             if i == len(regex) - 1:
                 return False
-            elif regex[i - 1] not in ["]", ")", "*"]: 
+            elif regex[i - 1] not in ["]", ")", "*", "e"]: 
                 return False
-            elif regex[i + 1] not in ["[", "("]:
+            elif regex[i + 1] not in ["[", "(", "e"]:
                 return False
         elif regex[i] == ".":
             if i == len(regex) - 1:
                 return False
-            elif regex[i - 1] not in ["]", ")", "*"]: 
+            elif regex[i - 1] not in ["]", ")", "*", "e"]: 
                 return False
-            elif regex[i + 1] not in ["[", "("]:
+            elif regex[i + 1] not in ["[", "(", "e"]:
                 return False
         elif regex[i] == "*":
             if regex[i - 1] not in ["]", ")"]:

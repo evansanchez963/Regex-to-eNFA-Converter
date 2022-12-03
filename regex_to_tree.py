@@ -7,7 +7,6 @@
 """
 def infix_to_postfix(regex):
     precedence_dict = {
-        "": 0,
         "(": 1,
         "+": 2,
         ".": 3,
@@ -26,6 +25,9 @@ def infix_to_postfix(regex):
         elif curr_char == "[":
             operand = regex[i:i+5]
             postfix.append(operand)
+        # Treat epsilon like an operand
+        elif curr_char == "e":
+            postfix.append(curr_char)
         # Always append '(' to stack
         elif curr_char == "(":
             stack.append("(")
@@ -45,14 +47,18 @@ def infix_to_postfix(regex):
             else:
                 top = stack[len(stack)-1]
                 if precedence_dict[top] >= precedence_dict[curr_char]:
-                    while precedence_dict[top] >= precedence_dict[curr_char]:
+                    curr_char_precedence = precedence_dict[curr_char]
+                    top_stack_precedence = precedence_dict[top]
+                    while top_stack_precedence >= curr_char_precedence:
                         operator = stack.pop()
                         if len(stack) == 0:
-                            top = ""
+                            top_stack_precedence = 0
                         else:
                             top = stack[len(stack)-1]
+                            top_stack_precedence = precedence_dict[top]
                         postfix.append(operator)
-                        stack.append(curr_char)
+                        if curr_char_precedence != top_stack_precedence:
+                            stack.append(curr_char)
                 else:
                     stack.append(curr_char)
     
