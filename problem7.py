@@ -1,5 +1,6 @@
 from validate_regex import is_regex_valid
-from regex_to_tree import *
+from regex_to_tree import infix_to_postfix, construct_expression_tree
+from tree_to_NFA import build_eNFA
 
 """
     TEST CASES:
@@ -28,11 +29,15 @@ def main():
 
     # Part 1: Convert regex to e-NFA
     postfix = infix_to_postfix(regex)
-    print(*postfix, sep=" ")
+    #print(*postfix, sep=" ")
 
-    #expression_tree = construct_expression_tree(postfix)
+    expression_tree = construct_expression_tree(postfix)
+    #print(expression_tree.right.data)
     #print()
-    #print(expression_tree.data)
+    e_NFA = build_eNFA(expression_tree)
+    print("e_NFA start state:", e_NFA.start_state)
+    print("e_NFA accepting states:", e_NFA.accepting_states)
+    print("e_NFA transitions:", e_NFA.transitions)
 
     # Part 2: Remove e-moves from NFA
 

@@ -32,7 +32,7 @@ class NFA:
 
 """
     ARGS:
-    1: operand - An operand to be converted into an NFA
+    1: operand - An operand to be converted into an NFA, can be an alphabet ([000]-[999]) or e (epsilon)
 
     DESCRIPTION: Creates an nfa for an operand. Creates a new start state and end state
     where the transition from the start state to the end state is the given operand.
@@ -167,3 +167,37 @@ def kleene_star(nfa):
     accepting_states.append(start_state)
     
     return NFA(start_state, accepting_states, transitions)
+
+
+
+
+
+"""
+    ARGS:
+    1: root - The root of the expression tree that is used to build the e-NFA
+
+    DESCRIPTION: Creates and returns a new e-NFA. The e-NFA is recursively built using in-order traversal.
+"""
+def build_eNFA(root):
+    # Base case
+    if root is None:
+        return None
+
+    # Make NFAs for operands
+    if root.left is None and root.right is None:
+        return operand_NFA(root.data)
+
+    # Recursively build left tree
+    left_NFA = build_eNFA(root.left)
+
+    # Recursively build right tree
+    right_NFA = build_eNFA(root.right)
+    
+    # Check and apply operation
+    if root.data == "+":
+        return union(left_NFA, right_NFA)
+    elif root.data == ".":
+        return concat(left_NFA, right_NFA)
+    else:
+        # Kleene star only has a left subtree and no right child
+        return kleene_star(left_NFA)
