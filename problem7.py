@@ -33,13 +33,15 @@ def main():
     expression_tree = construct_expression_tree(postfix)
     #print(expression_tree.right.data)
     e_NFA = build_eNFA(expression_tree)
+    print("e_NFA states:", e_NFA.states)
+    print("e_NFA alphabet:", e_NFA.alphabet)
     print("e_NFA start state:", e_NFA.start_state)
     print("e_NFA accepting states:", e_NFA.accepting_states)
     print("e_NFA transitions:", e_NFA.transitions)
 
     # Part 2: Remove e-moves from NFA
-    print()
-    e_NFA.remove_e_moves()
+    #print()
+    #e_NFA.remove_e_moves()
 
     # Part 3: Test if string w is accepted by e-free NFA
 

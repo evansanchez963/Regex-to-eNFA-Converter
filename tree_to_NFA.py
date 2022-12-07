@@ -12,16 +12,20 @@ def increment_state_count():
 """
     This is an NFA class that stores the e-NFA and NFA of a given regex.
     Properties:
-        1: start_state - An integer representing a starting state
-        2: accepting_states - A set of integers that represent accepting states
-        3: transitions - A dictionary of dictionaries where the key is an integer representing a state
+        1: states - A set of integers representing the states in the NFA
+        2: alphabet - A set of operands plus epsilon representing the alphabet of the NFA
+        3: start_state - An integer representing a starting state
+        4: accepting_states - A set of integers that represent accepting states
+        5: transitions - A dictionary of dictionaries where the key is an integer representing a state
         and the value is another dictionary. In those dictionaries, the key is a key in the alphabet
         and the value is a set of integers representing which states it transfers to.
         Example: {0: {'[000]': {0, 1}, '[111]': {0}}} means that starting from state 0, input [000] transitions
         to state 0 and state 1, and input [111] transitions to state 1.
 """
 class NFA:
-    def __init__(self, start_state=None, accepting_states=None, transitions=None):
+    def __init__(self, states=None, alphabet=None, start_state=None, accepting_states=None, transitions=None):
+        self.states = states
+        self.alphabet = alphabet
         self.start_state = start_state
         self.accepting_states = accepting_states
         self.transitions = transitions
@@ -42,13 +46,13 @@ class NFA:
 
         return e_closure
     
-    # TODO: Create a function called remove_e_moves() that removes epsilon transitions from an NFA
+    # TODO: Create a function called remove_e_moves() that removes epsilon transitions from the NFA
     def remove_e_moves(self):
         for state in self.transitions.keys():
             e_closure = self.calc_e_closure(state)
             print(f"State: {state}, e_closure: {e_closure}")
 
-    # TODO: Create a function called accepts(arr) that determines if an alphabet array is accepted by the NFA or not
+    # TODO: Create a function called accepts that determines if an alphabet array is accepted by the NFA or not
     def accepts(alphabet_arr):
         pass
 
@@ -60,20 +64,22 @@ class NFA:
     ARGS:
     1: e_operand - A string "e" representing epsilon
 
-    DESCRIPTION: Creates and returns an nfa for epsilon. The start state is the same as the accepting state
+    DESCRIPTION: Creates and returns an nfa for epsilon. The start state is the same as the accepting state.
 """
 def epsilon_NFA():
+    states = set()
+    alphabet = set()
     start_state = 0
     accepting_states = set()
     transitions = {}
 
-    new_start_state = STATE_COUNT
+    start_state = STATE_COUNT
     increment_state_count()
-    start_state = new_start_state
+    states.add(start_state)
 
     accepting_states.add(start_state)
 
-    return NFA(start_state, accepting_states, transitions)
+    return NFA(states, alphabet, start_state, accepting_states, transitions)
 
 
 
@@ -87,24 +93,29 @@ def epsilon_NFA():
     where the transition from the start state to the end state is the given operand.
 """
 def operand_NFA(operand):
+    states = set()
+    alphabet = set()
     start_state = 0
     accepting_states = set()
     transitions = {}
 
+    alphabet.add(operand)
+
     # Create a new start state
-    new_start_state = STATE_COUNT
+    start_state = STATE_COUNT
     increment_state_count()
-    start_state = new_start_state
+    states.add(start_state)
 
     # Create a new accepting state
     new_accepting_state = STATE_COUNT
     increment_state_count()
     accepting_states.add(new_accepting_state)
+    states.add(new_accepting_state)
 
     # Create a transition (operand) from start state to new accepting state
     transitions[start_state] = {operand: {new_accepting_state}}
 
-    return NFA(start_state, accepting_states, transitions)
+    return NFA(states, alphabet, start_state, accepting_states, transitions)
 
 
 
@@ -118,14 +129,19 @@ def operand_NFA(operand):
     DESCRIPTION: Creates and returns a new NFA from the union of nfa_a and nfa_b.
 """
 def union(nfa_a, nfa_b):
+    states = set()
+    alphabet = set()
     start_state = 0
     accepting_states = set()
     transitions = {}
+
+    states = set.union(nfa_a.states, nfa_b.states)
+    alphabet = set.union(nfa_a.alphabet, nfa_b.alphabet)
     
     # Create a new start state
-    new_start_state = STATE_COUNT
+    start_state = STATE_COUNT
     increment_state_count()
-    start_state = new_start_state
+    states.add(start_state)
 
     # Add nfa_a and nfa_b's transitions
     for key in nfa_a.transitions:
@@ -135,15 +151,12 @@ def union(nfa_a, nfa_b):
 
     # Add e (epsilon) transitions from new start state to nfa_a and nfa_b's start states
     transitions[start_state] = {'e': {nfa_a.start_state, nfa_b.start_state}}
+    alphabet.add("e")
 
     # Add nfa_a and nfa_b's accepting states
     accepting_states = set().union(nfa_a.accepting_states, nfa_b.accepting_states)
-    #for state in nfa_a.accepting_states:
-    #    accepting_states.append(state)
-    #for state in nfa_b.accepting_states:
-    #    accepting_states.append(state)
 
-    return NFA(start_state, accepting_states, transitions)
+    return NFA(states, alphabet, start_state, accepting_states, transitions)
 
 
 
@@ -157,10 +170,14 @@ def union(nfa_a, nfa_b):
     DESCRIPTION: Creates and returns a new NFA from the concatenation of nfa_a and nfa_b.
 """
 def concat(nfa_a, nfa_b):
+    states = set()
+    alphabet = set()
     start_state = 0
     accepting_states = set()
     transitions = {}
 
+    states = set.union(nfa_a.states, nfa_b.states)
+    alphabet = set.union(nfa_a.alphabet, nfa_b.alphabet)
     start_state = nfa_a.start_state
 
     # Add transitions from nfa_a and nfa_b
@@ -170,6 +187,7 @@ def concat(nfa_a, nfa_b):
         transitions[key] = nfa_b.transitions[key]
 
     # Take accepting states from nfa_a and create e (epsilon) transitions to start state of nfa_b
+    alphabet.add("e")
     for state in nfa_a.accepting_states:
         if state in transitions:
             transitions[state]['e'].add(nfa_b.start_state)
@@ -179,7 +197,7 @@ def concat(nfa_a, nfa_b):
     # Make accepting_states the accepting states from nfa_b
     accepting_states = nfa_b.accepting_states.copy()
 
-    return NFA(start_state, accepting_states, transitions)
+    return NFA(states, alphabet, start_state, accepting_states, transitions)
 
 
 
@@ -192,20 +210,26 @@ def concat(nfa_a, nfa_b):
     DESCRIPTION: Creates and returns a new NFA from the kleene star of nfa.
 """
 def kleene_star(nfa):
+    states = set()
+    alphabet = set()
     start_state = 0
     accepting_states = set()
     transitions = {}
 
+    states = nfa.states
+    alphabet = nfa.alphabet
+
     # Create a new start state
-    new_start_state = STATE_COUNT
+    start_state = STATE_COUNT
     increment_state_count()
-    start_state = new_start_state
+    states.add(start_state)
 
     # Add transitions from nfa
     for key in nfa.transitions:
         transitions[key] = nfa.transitions[key]
 
     # Add e (epsilon) transition from new start state to previous start state
+    alphabet.add("e")
     transitions[start_state] = {'e': {nfa.start_state}}
 
     # Add epsilon transitions from previous accepting states to new start state
@@ -216,7 +240,7 @@ def kleene_star(nfa):
     accepting_states = nfa.accepting_states.copy()
     accepting_states.add(start_state)
     
-    return NFA(start_state, accepting_states, transitions)
+    return NFA(states, alphabet, start_state, accepting_states, transitions)
 
 
 
