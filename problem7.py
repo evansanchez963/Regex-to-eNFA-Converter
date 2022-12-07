@@ -15,7 +15,7 @@ from tree_to_NFA import build_eNFA
 def main():
     #regex = input("Enter a regular expression: ")
     #regex = regex.replace(" ", "") # Remove whitespace from regex
-    regex = "([100]+[001])*.[100]"
+    regex = "[011].[101]*.[000]"
     #w = input("Enter a string w: ")
 
     # Validate regex, terminate program if regex is invalid
@@ -30,16 +30,16 @@ def main():
     # Part 1: Convert regex to e-NFA
     postfix = infix_to_postfix(regex)
     #print(*postfix, sep=" ")
-
     expression_tree = construct_expression_tree(postfix)
     #print(expression_tree.right.data)
-    #print()
     e_NFA = build_eNFA(expression_tree)
     print("e_NFA start state:", e_NFA.start_state)
     print("e_NFA accepting states:", e_NFA.accepting_states)
     print("e_NFA transitions:", e_NFA.transitions)
 
     # Part 2: Remove e-moves from NFA
+    print()
+    e_NFA.remove_e_moves()
 
     # Part 3: Test if string w is accepted by e-free NFA
 
