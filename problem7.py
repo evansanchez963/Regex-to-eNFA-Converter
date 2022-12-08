@@ -13,12 +13,12 @@ from tree_to_NFA import build_eNFA
 """
 
 def main():
-    #regex = input("Enter a regular expression: ")
-    #regex = regex.replace(" ", "") # Remove whitespace from regex
-    regex = "([000]+[111]).[222]"
-    #w = input("Enter a string w: ")
-    w = "[000][222]"
+    regex = input("Enter a regular expression: ")
+    regex = regex.replace(" ", "") # Remove whitespace from regex
+    w = input("Enter a string w: ")
     w = w.replace(" ", "") # Remove whitespace from w
+    #regex = "[000]*"
+    #w = ""
 
     # Split input string into an array
     d = "]"
@@ -42,23 +42,23 @@ def main():
     expression_tree = construct_expression_tree(postfix)
     #print(expression_tree.right.data)
     NFA = build_eNFA(expression_tree)
-    #print("e_NFA states:", NFA.states)
-    #print("e_NFA alphabet:", NFA.alphabet)
-    #print("e_NFA start state:", NFA.start_state)
-    #print("e_NFA accepting states:", NFA.accepting_states)
-    #print("e_NFA transitions:", NFA.transitions)
+    #print("NFA states:", NFA.states)
+    #print("NFA alphabet:", NFA.alphabet)
+    #print("NFA start state:", NFA.start_state)
+    #print("NFA accepting states:", NFA.accepting_states)
+    #print("NFA transitions:", NFA.transitions)
     #print()
 
     # Part 2: Remove e-moves from NFA
     NFA.remove_e_moves()
-    #print("e_NFA states:", NFA.states)
-    #print("e_NFA alphabet:", NFA.alphabet)
-    #print("e_NFA start state:", NFA.start_state)
-    #print("e_NFA accepting states:", NFA.accepting_states)
-    #print("e_NFA transitions:", NFA.transitions)
+    #print("NFA states:", NFA.states)
+    #print("NFA alphabet:", NFA.alphabet)
+    #print("NFA start state:", NFA.start_state)
+    #print("NFA accepting states:", NFA.accepting_states)
+    #print("NFA transitions:", NFA.transitions)
+    #print()
 
     # Part 3: Test if string w is accepted by e-free NFA
-    # NFA.accepts(w)
     if NFA.accepts(w):
         print("String w is valid.")
     else:

@@ -66,8 +66,14 @@ class NFA:
                             new_transitions[state][symbol].add(dest_state)
                         else:
                             new_transitions[state] = {symbol: {dest_state}}
-            # Add the states with epsilon transitions and remove epsilon transitions
             e_closure = self.calc_e_closure(state)
+            # If a state can reach an accepting state by only epsilon traversal, 
+            # add it to the NFA's accepting states
+            for e_state in e_closure:
+                if e_state in self.accepting_states:
+                    self.accepting_states.add(state)
+                    break
+            # Add the states with epsilon transitions and remove epsilon transitions
             for e_state in e_closure:
                 for symbol in new_alphabet:
                     if e_state in self.transitions.keys() and symbol in self.transitions[e_state].keys():
