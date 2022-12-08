@@ -32,6 +32,9 @@ class NFA:
     
     # Returns an epsilon enclosure (set of states reachable by epsilon only) for a given state
     def calc_e_closure(self, state):
+        if state not in self.transitions.keys():
+            return {state}
+
         e_closure = set()
         stack = [state]
 
@@ -39,69 +42,48 @@ class NFA:
             curr_state = stack.pop()
             e_closure.add(curr_state)
 
-            if "e" in self.transitions[curr_state].keys():
+            if curr_state in self.transitions.keys() and "e" in self.transitions[curr_state].keys():
                 next_states = self.transitions[curr_state]["e"]
                 stack.extend(next_states)
                 e_closure = e_closure.union(next_states)
 
         return e_closure
     
-    # TODO: Create a function called remove_e_moves() that removes epsilon transitions from the NFA
+    # Removes epsilon transitions from the NFA
     def remove_e_moves(self):
-        #for state in self.transitions.keys():
-        #    e_closure = self.calc_e_closure(state)
-        #    print(f"State: {state}, e_closure: {e_closure}")
-        new_state = set()
-        new_alpha = set()
+        new_alphabet = self.alphabet
+        new_alphabet.remove("e")
         new_transitions = {}
-        new_accept = set()
-        new_start = 0
 
-        while(self.e_exists(self.transitions)):
-
-            for state in self.transitions.keys():
-                for key in self.transitions[state].keys():
-                    if key == 'e':
-                        newnew_transitions = {}
-                        for i in self.transitions[state][key]:
-                            for new_key in self.transitions[i].keys():
-                                a = new_key
-                                b = self.transitions[i][new_key]
-                                #b = self.calc_e_closure(new_key)
-
-                                if a in newnew_transitions.keys():
-                                    newnew_transitions[a] = set.union(newnew_transitions[a], b)
+        # Add the new transitions for the e-free NFA
+        for state in self.states:
+            # Add transitions in new_transitions not involving epsilon
+            for symbol in new_alphabet:
+                if state in self.transitions.keys() and symbol in self.transitions[state].keys():
+                    dest_states = self.transitions[state][symbol]
+                    for dest_state in dest_states:
+                        if state in new_transitions:
+                            new_transitions[state][symbol].add(dest_state)
+                        else:
+                            new_transitions[state] = {symbol: {dest_state}}
+            # Add the states with epsilon transitions and remove epsilon transitions
+            e_closure = self.calc_e_closure(state)
+            for e_state in e_closure:
+                for symbol in new_alphabet:
+                    if e_state in self.transitions.keys() and symbol in self.transitions[e_state].keys():
+                        dest_states = self.transitions[e_state][symbol]
+                        for dest_state in dest_states:
+                            if state in new_transitions:
+                                if symbol not in new_transitions[state].keys():
+                                    new_transitions[state][symbol] = {dest_state}
                                 else:
-                                    newnew_transitions[a] = b
+                                    new_transitions[state][symbol].add(dest_state)
+                            else:
+                                new_transitions[state] = {symbol: {dest_state}}
 
-                        new_transitions[state] = newnew_transitions
-                    else:
-                        new_transitions[state] = self.transitions[state]
+        self.transitions = new_transitions
 
-            self.transitions = new_transitions
-            print(new_transitions)
-            print()
-
-        new_state = self.states
-        new_alpha = self.alphabet
-        new_alpha.remove("e")
-        new_accept = self.accepting_states      # TODO: Update accepting states
-        new_start = self.start_state
-
-        return NFA(new_state, new_alpha, new_start, new_accept, new_transitions)
-                        
-
-    def e_exists(self, transitions):
-        for i in transitions:
-            for j in transitions[i]:
-                if (j == "e"):
-                    return True
-
-        return False
-
-                    
-
-    # TODO: Create a function called accepts that determines if an alphabet array is accepted by the NFA or not
+    # Determines if an alphabet array is accepted by the NFA or not
     def accepts(alphabet_arr):
         pass
 
