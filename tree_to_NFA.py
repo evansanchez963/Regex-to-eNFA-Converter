@@ -84,8 +84,31 @@ class NFA:
         self.transitions = new_transitions
 
     # Determines if an alphabet array is accepted by the NFA or not
-    def accepts(alphabet_arr):
-        pass
+    def accepts(self, alphabet_arr):
+        # Initialize a set of possible states the NFA can be in after reading a specific symbol
+        curr_states = {self.start_state}
+
+        for symbol in alphabet_arr:
+            if symbol not in self.alphabet:
+                return False
+
+            # Store the states of the NFA after reading a symbol
+            next_states = set()
+
+            for state in curr_states:
+                # If there is a valid transition from a specific state to a specific input,
+                # add the states that it transitions to to next states
+                if state in self.transitions.keys() and symbol in self.transitions[state].keys():
+                    next_states = next_states.union(self.transitions[state][symbol])
+            
+            # Update the current states of the NFA
+            curr_states = next_states
+
+        for state in curr_states:
+            if state in self.accepting_states:
+                return True
+
+        return False
 
 
 
