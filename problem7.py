@@ -13,9 +13,9 @@ from tree_to_NFA import build_eNFA
 """
 
 def main():
-    #regex = input("Enter a regular expression: ")
-    #regex = regex.replace(" ", "") # Remove whitespace from regex
-    regex = "[011].[101]*.[000]"
+    regex = input("Enter a regular expression: ")
+    regex = regex.replace(" ", "") # Remove whitespace from regex
+    #regex = "([000]+[000].[111])*.([000]+[333])"
     #w = input("Enter a string w: ")
 
     # Validate regex, terminate program if regex is invalid
@@ -38,10 +38,18 @@ def main():
     print("e_NFA start state:", e_NFA.start_state)
     print("e_NFA accepting states:", e_NFA.accepting_states)
     print("e_NFA transitions:", e_NFA.transitions)
-
+    print()
     # Part 2: Remove e-moves from NFA
-    #print()
-    #e_NFA.remove_e_moves()
+    print()
+    f_NFA = e_NFA.remove_e_moves()
+    print("f_NFA states:", f_NFA.states)
+    print("f_NFA alphabet:", f_NFA.alphabet)
+    print("f_NFA start state:", f_NFA.start_state)
+    print("f_NFA accepting states:", f_NFA.accepting_states)
+    print("f_NFA transitions:", f_NFA.transitions)
+    print()
+
+    #e_NFA.e_exists(e_NFA.transitions)
 
     # Part 3: Test if string w is accepted by e-free NFA
 
